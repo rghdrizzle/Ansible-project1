@@ -1,0 +1,42 @@
+---
+- name: Install node and npm
+  hosts: project
+  become: yes
+  tasks:
+    - name: Update apt repo and cache
+      apt:
+        update_cache: yes
+        force_apt_get: yes
+        cache_valid_time: 3600
+    - name: Installing node and npm
+      apt: 
+        pkg: 
+          - nodejs
+          - npm
+
+- name: Deploy nodejs app
+  hosts: project  
+  become: yes
+  tasks:  
+    - name: copy nodejs folder to server
+      copy:
+        src: /root/ansible-project1/nodejs-app/weather-app-test-1.0.0.tgz
+        dest: /home/azureuser/app-1.0.0.tgz
+    - name: unpack the nodejs tar file
+      unarchive:
+        src: /home/azureuser/app-1.0.0.tgz
+        dest: /home/azureuser/
+        remote_src: yes
+    - name: Install dependencies
+      npm:
+        path: /home/azureuser/package
+    - name: starting the application
+      command:
+        chdir: /home/azureuser/package
+        cmd: node server
+      async: 1000
+      poll: 0
+    - name: ensuring app is running
+      shell: ps aux | grep node
+      register: app_status
+    - debug: msg={{app_status.stdout_lines}}
