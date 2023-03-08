@@ -34,7 +34,7 @@
       command:
         chdir: /home/azureuser/package
         cmd: node server
-      async: 1000
+      async: 1000   #since the node server keeps running till I stop it , the result wont be produced since ansible will wait for it to complete , so I used async here 
       poll: 0
     - name: ensuring app is running
       shell: ps aux | grep node
