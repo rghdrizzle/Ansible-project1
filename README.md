@@ -1,5 +1,5 @@
 # Ansible-project1
-Deploying a simple nodejs application to a server using Ansible
+Deploying a nodejs application to a server using Ansible
 # TASKS AUTOMATED
 <ul>
 <li> Updating apt and cache</li>
